@@ -4,17 +4,677 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSD-TP | Consciousness-Stream Duality Theory</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Orbitron:wght@500;700&display=swap">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #7c3aed;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Atom Background */
+        .atom-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .nucleus {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--accent), transparent 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+        }
+
+        .electron {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .glass-nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem 2rem;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo img {
+            height: 50px;
+            transition: transform 0.3s;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text);
+            margin: 5px 0;
+            transition: 0.4s;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 0 2rem;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #e2e8f0, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            border: 2px solid var(--accent);
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-disabled {
+            background-color: var(--secondary);
+            color: var(--text-secondary);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            border: 2px solid var(--glass-border);
+            cursor: not-allowed;
+            display: inline-block;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .arrow {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-left: 0;
+            border-top: 0;
+            transform: rotate(45deg);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .divider {
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            margin: 0 auto;
+        }
+
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .theory-card {
+            background: var(--secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--glass-border);
+        }
+
+        .theory-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+
+        .theory-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .interactive-demo {
+            background: var(--secondary);
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .demo-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .time-flow-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .flow-btn {
+            background-color: transparent;
+            color: var(--text);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s;
+            border: 2px solid var(--glass-border);
+            cursor: pointer;
+        }
+
+        .flow-btn:hover, .flow-btn.active {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .time-flow-box {
+            width: 100%;
+            height: 400px;
+            background-color: var(--primary);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-flow-visual {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .time-arrow {
+            font-size: 3rem;
+            margin: 0 1rem;
+            color: var(--accent);
+        }
+
+        .time-particle {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.8;
+        }
+
+        .research-timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-left: 50px;
+        }
+
+        .research-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-date {
+            position: absolute;
+            left: -50px;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .timeline-content {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .timeline-content h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-card {
+            text-align: center;
+            background: var(--secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            transition: transform 0.3s;
+            border: 1px solid var(--glass-border);
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .team-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background-size: cover;
+            background-position: center;
+            border: 3px solid var(--accent);
+        }
+
+        .team-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .team-card p {
+            color: var(--text-secondary);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .contact-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .footer {
+            background: var(--secondary);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        .download-section {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .download-card {
+            background: var(--secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s;
+        }
+
+        .download-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .download-card h3 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--secondary);
+                flex-direction: column;
+                padding: 1rem;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .mobile-menu.active .bar:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+
+            .mobile-menu.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .mobile-menu.active .bar:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .time-flow-controls {
+                flex-direction: column;
+            }
+
+            .download-section {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .download-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @keyframes moveForward {
+            0% { transform: translateX(-50px) translateY(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateX(calc(100% + 50px)) translateY(var(--random-y)); opacity: 0; }
+        }
+        
+        @keyframes moveReverse {
+            0% { transform: translateX(calc(100% + 50px)) translateY(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateX(-50px) translateY(var(--random-y)); opacity: 0; }
+        }
+        
+        @keyframes moveCollision {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--end-x), var(--end-y)); opacity: 0; }
+        }
+
+        @keyframes orbit {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(var(--radius)) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(var(--radius)) rotate(-360deg); }
+        }
+    </style>
 </head>
 <body>
+    <!-- Atom Background -->
+    <div class="atom-background">
+        <div class="nucleus"></div>
+        <div class="orbit" style="--radius: 200px; width: 400px; height: 400px;"></div>
+        <div class="orbit" style="--radius: 300px; width: 600px; height: 600px;"></div>
+        <div class="orbit" style="--radius: 400px; width: 800px; height: 800px;"></div>
+        <div class="electron" style="--radius: 200px; animation: orbit 10s linear infinite;"></div>
+        <div class="electron" style="--radius: 300px; animation: orbit 15s linear infinite; animation-delay: -5s;"></div>
+        <div class="electron" style="--radius: 400px; animation: orbit 20s linear infinite; animation-delay: -10s;"></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="glass-nav">
         <div class="nav-container">
-            <div class="logo">
-                <span class="csd">CSD</span><span class="tp">-TP</span>
-            </div>
             <ul class="nav-links">
                 <li><a href="#theory">Theory</a></li>
                 <li><a href="#research">Research</a></li>
@@ -32,7 +692,6 @@
 
     <!-- Hero Section -->
     <header class="hero">
-        <div id="fractal-canvas"></div>
         <div class="hero-content">
             <h1 class="hero-title">CONSCIOUSNESS-STREAM DUALITY</h1>
             <h2 class="hero-subtitle">A New Model of Temporal Perception</h2>
@@ -71,6 +730,26 @@
         </div>
     </section>
 
+    <!-- Download Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2>Download Papers</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="download-section">
+            <div class="download-card">
+                <h3>CSD TP Part 1</h3>
+                <p>The foundational paper introducing Consciousness-Stream Duality</p>
+                <a href="https://drive.google.com/file/d/1_6DBqOTCa8jsOWH_oDDukSonCb7Aliwb/view?usp=drivesdk" class="btn-primary" style="margin-top: 1rem;">Download PDF</a>
+            </div>
+            <div class="download-card">
+                <h3>CSD TP Part 2</h3>
+                <p>The advanced applications and experimental validations</p>
+                <a href="#" class="btn-disabled" style="margin-top: 1rem;">Coming Soon</a>
+            </div>
+        </div>
+    </section>
+
     <!-- Interactive Demo -->
     <section class="interactive-demo">
         <div class="demo-container">
@@ -80,7 +759,12 @@
                 <button id="reverse-flow" class="flow-btn">Reverse Flow</button>
                 <button id="collision-btn" class="flow-btn">Create Temporal Knot</button>
             </div>
-            <div id="time-flow-visualization"></div>
+            <div class="time-flow-box">
+                <div class="time-flow-visual">
+                    <div class="time-particle" style="--random-y: -20px; animation: moveForward 2s linear infinite;"></div>
+                    <div class="time-arrow">→</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -92,14 +776,14 @@
         </div>
         <div class="research-timeline">
             <div class="timeline-item">
-                <div class="timeline-date">2023</div>
+                <div class="timeline-date">2025</div>
                 <div class="timeline-content">
                     <h3>Quantum Retrocausality Confirmed</h3>
                     <p>Experimental validation of future choices affecting past quantum states.</p>
                 </div>
             </div>
             <div class="timeline-item">
-                <div class="timeline-date">2024</div>
+                <div class="timeline-date">2025</div>
                 <div class="timeline-content">
                     <h3>Fractal EEG Patterns Discovered</h3>
                     <p>Distinct neural signatures found in precognitive subjects.</p>
@@ -123,11 +807,10 @@
         </div>
         <div class="team-grid">
             <div class="team-card">
-                <div class="team-img" style="background-image: url('https://taimiya-creator.github.io/csd-tp/Picsart_25-06-29_17-52-52-456.png')"></div>
+                <div class="team-img" style="background-image: url('https://taimiya-creator.github.io/csd-tp/Picsart_25-06-29_17-52-52-456.png');"></div>
                 <h3>Taimiya Amjad</h3>
                 <p>Theory Founder</p>
             </div>
-            <!-- Additional team members would go here -->
         </div>
     </section>
 
@@ -148,9 +831,6 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="logo">
-                <span class="csd">CSD</span><span class="tp">-TP</span>
-            </div>
             <p>© 2025 Consciousness-Stream Duality Theory. All rights reserved.</p>
             <div class="social-links">
                 <a href="#">Twitter</a>
@@ -160,6 +840,147 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            
+            // Close when clicking a link
+            if (navLinks.classList.contains('active')) {
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                        navLinks.classList.remove('active');
+                    });
+                });
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Time flow visualization
+        const forwardBtn = document.getElementById('forward-flow');
+        const reverseBtn = document.getElementById('reverse-flow');
+        const collisionBtn = document.getElementById('collision-btn');
+        const timeVisual = document.querySelector('.time-flow-visual');
+        const timeArrow = document.querySelector('.time-arrow');
+
+        function getRandomY() {
+            return Math.random() * 100 - 50 + 'px';
+        }
+
+        forwardBtn.addEventListener('click', function() {
+            document.querySelectorAll('.flow-btn').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            timeArrow.textContent = '→';
+            timeArrow.style.color = '#7c3aed';
+            
+            // Remove all particles
+            document.querySelectorAll('.time-particle').forEach(particle => particle.remove());
+            
+            // Create forward particles
+            for (let i = 0; i < 5; i++) {
+                createParticle('forward');
+            }
+        });
+
+        reverseBtn.addEventListener('click', function() {
+            document.querySelectorAll('.flow-btn').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            timeArrow.textContent = '←';
+            timeArrow.style.color = '#ff6b6b';
+            
+            // Remove all particles
+            document.querySelectorAll('.time-particle').forEach(particle => particle.remove());
+            
+            // Create reverse particles
+            for (let i = 0; i < 5; i++) {
+                createParticle('reverse');
+            }
+        });
+
+        collisionBtn.addEventListener('click', function() {
+            // Create explosion effect
+            timeArrow.textContent = '⚡';
+            timeArrow.style.color = '#f9ca24';
+            
+            // Remove all particles
+            document.querySelectorAll('.time-particle').forEach(particle => particle.remove());
+            
+            // Create collision particles
+            for (let i = 0; i < 20; i++) {
+                createParticle('collision');
+            }
+        });
+
+        function createParticle(type) {
+            const particle = document.createElement('div');
+            particle.className = 'time-particle';
+            
+            const size = Math.random() * 10 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            const colors = {
+                forward: '#7c3aed',
+                reverse: '#ff6b6b',
+                collision: '#f9ca24'
+            };
+            
+            particle.style.backgroundColor = colors[type];
+            
+            const startX = type === 'forward' ? -50 : 
+                          type === 'reverse' ? window.innerWidth + 50 : 
+                          Math.random() * window.innerWidth;
+            
+            const startY = type === 'collision' ? 
+                          Math.random() * 400 : 
+                          Math.random() * 200 + 100;
+            
+            particle.style.left = `${startX}px`;
+            particle.style.top = `${startY}px`;
+            
+            const duration = Math.random() * 3 + 2;
+            
+            if (type === 'forward') {
+                particle.style.setProperty('--random-y', getRandomY());
+                particle.style.animation = `moveForward ${duration}s linear infinite`;
+            } else if (type === 'reverse') {
+                particle.style.setProperty('--random-y', getRandomY());
+                particle.style.animation = `moveReverse ${duration}s linear infinite`;
+            } else {
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 100 + 50;
+                particle.style.animation = 
+                    `moveCollision ${duration}s linear forwards`;
+                particle.style.setProperty('--end-x', `${Math.cos(angle) * distance}px`);
+                particle.style.setProperty('--end-y', `${Math.sin(angle) * distance}px`);
+            }
+            
+            document.querySelector('.time-flow-visual').appendChild(particle);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, duration * 1000);
+        }
+
+        // Create initial particles
+        for (let i = 0; i < 5; i++) {
+            createParticle('forward');
+        }
+    </script>
 </body>
 </html>
